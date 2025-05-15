@@ -15,12 +15,11 @@ export default function Profile() {
   const [profile, setProfile] = useState<ProfileData>({ name: '', phone: '' });
   const [message, setMessage] = useState<string | null>(null);
 
-  // Fetch user and profile data on mount
   useEffect(() => {
     async function fetchUser() {
       const { data, error } = await supabase.auth.getUser();
 
-      if (error) {
+      if (error || !data?.user) {
         setMessage('Failed to load user info.');
         setLoading(false);
         return;
@@ -28,21 +27,31 @@ export default function Profile() {
 
       setUser(data.user);
 
-      if (data.user) {
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('name, phone')
-          .eq('id', data.user.id)
-          .single();
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('name, phone')
+        .eq('id', data.user.id)
+        .single();
 
-        if (profileError) {
-          setMessage('Could not fetch profile details.');
-        } else if (profileData) {
-          setProfile({ 
-            name: profileData.name || '', 
-            phone: profileData.phone || '' 
-          });
+      if (profileError) {
+        // Auto-create profile if not found
+        const { error: insertError } = await supabase.from('profiles').insert({
+          id: data.user.id,
+          name: '',
+          phone: '',
+          updated_at: new Date().toISOString(),
+        });
+
+        if (insertError) {
+          setMessage(`Error creating profile: ${insertError.message}`);
+        } else {
+          setProfile({ name: '', phone: '' });
         }
+      } else if (profileData) {
+        setProfile({
+          name: profileData.name || '',
+          phone: profileData.phone || '',
+        });
       }
 
       setLoading(false);
@@ -51,16 +60,13 @@ export default function Profile() {
     fetchUser();
   }, []);
 
-  // Handle profile input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  // Update profile info
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
-
     if (!user) return;
 
     const updates = {
@@ -72,14 +78,9 @@ export default function Profile() {
 
     const { error } = await supabase.from('profiles').upsert(updates);
 
-    if (error) {
-      setMessage('Failed to update profile.');
-    } else {
-      setMessage('Profile updated successfully!');
-    }
+    setMessage(error ? 'Failed to update profile.' : 'Profile updated successfully!');
   };
 
-  // Logout user
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = '/LoginPage';
