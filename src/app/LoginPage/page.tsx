@@ -1,89 +1,95 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
-export default function CancelRide() {
-  const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState<string | null>(null);
+export default function Login() {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleCancel = async (e: React.FormEvent) => {
+  const fullText = "Fast. Secure. Reliable. Welcome back!";
+  const [typedText, setTypedText] = useState('');
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      setTypedText((prev) => prev + fullText[index]);
+      index++;
+      if (index >= fullText.length) clearInterval(interval);
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage(null);
+    setError(null);
     setLoading(true);
+    setSuccessMessage(null);
 
-    const { data: rides, error: fetchError } = await supabase
-      .from('rides')
-      .select('id')
-      .eq('phone', phone);
-
-    if (fetchError) {
-      setLoading(false);
-      setMessage(`error: ${fetchError.message}`);
-      return;
-    }
-
-    if (!rides || rides.length === 0) {
-      setLoading(false);
-      setMessage('No ride found with this phone number.');
-      return;
-    }
-
-    const rideIds = rides.map((ride) => ride.id);
-
-    const { error: deleteError } = await supabase
-      .from('rides')
-      .delete()
-      .in('id', rideIds);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
+    });
 
     setLoading(false);
 
-    if (deleteError) {
-      setMessage(`error: ${deleteError.message}`);
+    if (error) {
+      setError(error.message);
     } else {
-      setMessage('Ride cancelled successfully.');
-      setPhone('');
+      setSuccessMessage('Login successful! Redirecting...');
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
     }
-  };
-
-  const renderMessage = () => {
-    if (!message) return null;
-    const isError = message.toLowerCase().includes('error') || message.toLowerCase().includes('no ride');
-
-    return (
-      <div
-        className={`mb-6 px-5 py-3 rounded-md text-center text-sm font-medium ${
-          isError
-            ? 'bg-red-100 text-red-600 border border-red-300 animate-pulse'
-            : 'bg-green-100 text-green-800 border border-green-300 animate-fadeIn'
-        }`}
-      >
-        {message}
-      </div>
-    );
   };
 
   return (
     <div className="min-h-screen bg-green-950 flex items-center justify-center px-8 py-16">
       <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 md:p-12">
-        <div className="flex flex-col items-center justify-center mb-6">
-          <span className="text-5xl mb-2">🚫</span>
-          <h1 className="text-4xl font-semibold text-green-900 tracking-wide text-center">
-            Cancel Ride
-          </h1>
-        </div>
+        <h1 className="text-4xl font-semibold mb-6 text-center text-green-900 tracking-wide">
+          Login to Galaxy Ride
+        </h1>
 
-        {renderMessage()}
+        <p className="text-center text-green-700 mb-8 h-8 font-mono tracking-wider animate-fadeInOut">
+          {typedText}
+        </p>
 
-        <form onSubmit={handleCancel} className="space-y-6">
+        {error && (
+          <p className="text-red-600 mb-6 text-center font-medium animate-pulse">
+            {error}
+          </p>
+        )}
+
+        {successMessage && (
+          <div className="mb-6 bg-green-100 border border-green-300 text-green-800 px-5 py-3 rounded-md text-center font-medium animate-fadeInOut">
+            {successMessage}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
           <input
-            type="text"
-            name="phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Enter your phone number"
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="Email Address"
             required
+            className="w-full px-5 py-3 border border-green-300 rounded-lg text-green-900 placeholder-green-400 focus:outline-none focus:ring-4 focus:ring-green-300 transition-shadow duration-300"
+          />
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="Password"
+            required
+            minLength={6}
             className="w-full px-5 py-3 border border-green-300 rounded-lg text-green-900 placeholder-green-400 focus:outline-none focus:ring-4 focus:ring-green-300 transition-shadow duration-300"
           />
           <button
@@ -91,13 +97,9 @@ export default function CancelRide() {
             disabled={loading}
             className="w-full bg-green-700 text-white py-3 rounded-lg hover:bg-green-800 disabled:opacity-60 transition-colors duration-300 font-semibold"
           >
-            {loading ? 'Cancelling...' : 'Cancel Ride'}
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
-
-        <div className="mt-6 text-center text-green-700 text-sm font-mono tracking-wider">
-          Cancel anytime before the ride begins.
-        </div>
       </div>
     </div>
   );
