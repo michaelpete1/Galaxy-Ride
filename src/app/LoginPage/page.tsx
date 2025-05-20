@@ -1,106 +1,103 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
-export default function Login() {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState<string | null>(null);
+export default function CancelRide() {
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const fullText = "Fast. Secure. Reliable. Welcome back!";
-  const [typedText, setTypedText] = useState('');
-
-  useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      setTypedText((prev) => prev + fullText[index]);
-      index++;
-      if (index >= fullText.length) clearInterval(interval);
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCancel = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setMessage(null);
     setLoading(true);
-    setSuccessMessage(null);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: form.email,
-      password: form.password,
-    });
+    const { data: rides, error: fetchError } = await supabase
+      .from('rides')
+      .select('id')
+      .eq('phone', phone);
+
+    if (fetchError) {
+      setLoading(false);
+      setMessage(`error: ${fetchError.message}`);
+      return;
+    }
+
+    if (!rides || rides.length === 0) {
+      setLoading(false);
+      setMessage('No ride found with this phone number.');
+      return;
+    }
+
+    const rideIds = rides.map((ride) => ride.id);
+
+    const { error: deleteError } = await supabase
+      .from('rides')
+      .delete()
+      .in('id', rideIds);
 
     setLoading(false);
 
-    if (error) {
-      setError(error.message);
+    if (deleteError) {
+      setMessage(`error: ${deleteError.message}`);
     } else {
-      setSuccessMessage('Login successful! Redirecting...');
-      console.log('Logged in:', data);
-
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 2000);
+      setMessage('Ride cancelled successfully.');
+      setPhone('');
     }
   };
 
+  const renderMessage = () => {
+    if (!message) return null;
+    const isError = message.toLowerCase().includes('error') || message.toLowerCase().includes('no ride');
+
+    return (
+      <div
+        className={`mb-6 px-5 py-3 rounded-md text-center text-sm font-medium ${
+          isError
+            ? 'bg-red-100 text-red-600 border border-red-300 animate-pulse'
+            : 'bg-green-100 text-green-800 border border-green-300 animate-fadeIn'
+        }`}
+      >
+        {message}
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-navy-900 flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl p-10 md:p-12">
-        <h1 className="text-3xl font-extrabold mb-4 text-center text-navy-900 animate-fadeIn">
-          Login to Galaxy Ride
-        </h1>
+    <div className="min-h-screen bg-green-950 flex items-center justify-center px-8 py-16">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 md:p-12">
+        <div className="flex flex-col items-center justify-center mb-6">
+          <span className="text-5xl mb-2">🚫</span>
+          <h1 className="text-4xl font-semibold text-green-900 tracking-wide text-center">
+            Cancel Ride
+          </h1>
+        </div>
 
-        <p className="text-center text-blue-600 mb-6 h-6 font-mono tracking-wide animate-fadeIn">
-          {typedText}
-        </p>
+        {renderMessage()}
 
-        {error && (
-          <p className="text-red-600 mb-4 text-center animate-pulse">{error}</p>
-        )}
-
-        {successMessage && (
-          <div className="mb-4 bg-green-100 text-green-800 border border-green-300 px-4 py-2 rounded text-center animate-fadeIn">
-            {successMessage}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleCancel} className="space-y-6">
           <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Email Address"
+            type="text"
+            name="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Enter your phone number"
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-          />
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Password"
-            required
-            minLength={6}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full px-5 py-3 border border-green-300 rounded-lg text-green-900 placeholder-green-400 focus:outline-none focus:ring-4 focus:ring-green-300 transition-shadow duration-300"
           />
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-navy-800 text-white py-3 rounded-lg hover:bg-navy-900 disabled:opacity-50 transition"
+            className="w-full bg-green-700 text-white py-3 rounded-lg hover:bg-green-800 disabled:opacity-60 transition-colors duration-300 font-semibold"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Cancelling...' : 'Cancel Ride'}
           </button>
         </form>
+
+        <div className="mt-6 text-center text-green-700 text-sm font-mono tracking-wider">
+          Cancel anytime before the ride begins.
+        </div>
       </div>
     </div>
   );

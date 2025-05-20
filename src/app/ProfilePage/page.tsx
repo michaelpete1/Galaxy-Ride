@@ -88,23 +88,25 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-navy-900 text-lg">
+      <div className="min-h-screen flex items-center justify-center bg-[#0b2e1e] text-green-300 text-lg font-semibold">
         Loading profile...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-navy-900 flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-10 md:p-12">
-        <h1 className="text-3xl font-extrabold text-center mb-8 text-navy-900">Your Profile</h1>
+    <div className="min-h-screen bg-[#0b2e1e] flex items-center justify-center px-6 py-12">
+      <div className="w-full max-w-lg bg-green-900 rounded-2xl shadow-lg p-10 md:p-12 animate-fadeIn">
+        <h1 className="text-3xl font-extrabold text-center mb-8 text-green-300">
+          Your Profile
+        </h1>
 
         {message && (
           <p
-            className={`mb-6 text-center px-4 py-2 rounded ${
+            className={`mb-6 text-center px-4 py-2 rounded font-semibold ${
               message.toLowerCase().includes('failed')
-                ? 'bg-red-100 text-red-700'
-                : 'bg-green-100 text-green-700'
+                ? 'bg-red-700 text-red-200 border border-red-600'
+                : 'bg-green-700 text-green-200 border border-green-600'
             }`}
           >
             {message}
@@ -113,7 +115,7 @@ export default function Profile() {
 
         <form onSubmit={handleUpdate} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block mb-1 font-semibold text-gray-700">
+            <label htmlFor="email" className="block mb-1 font-semibold text-green-300">
               Email (read-only)
             </label>
             <input
@@ -121,12 +123,12 @@ export default function Profile() {
               id="email"
               value={user?.email || ''}
               disabled
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+              className="w-full px-4 py-3 rounded-lg bg-green-800 border border-green-700 text-green-300 cursor-not-allowed"
             />
           </div>
 
           <div>
-            <label htmlFor="name" className="block mb-1 font-semibold text-gray-700">
+            <label htmlFor="name" className="block mb-1 font-semibold text-green-300">
               Name
             </label>
             <input
@@ -136,12 +138,12 @@ export default function Profile() {
               value={profile.name}
               onChange={handleChange}
               placeholder="Your Name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-800"
+              className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
             />
           </div>
 
           <div>
-            <label htmlFor="phone" className="block mb-1 font-semibold text-gray-700">
+            <label htmlFor="phone" className="block mb-1 font-semibold text-green-300">
               Phone Number
             </label>
             <input
@@ -151,13 +153,13 @@ export default function Profile() {
               value={profile.phone}
               onChange={handleChange}
               placeholder="Your Phone Number"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-800"
+              className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-navy-800 text-white py-3 rounded-lg hover:bg-navy-900 transition"
+            className="w-full bg-green-700 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition"
           >
             Update Profile
           </button>

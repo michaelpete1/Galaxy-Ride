@@ -42,18 +42,18 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-navy-900 flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl p-10 md:p-12">
-        <h1 className="flex items-center justify-center text-3xl font-bold mb-4 text-navy-900 animate-fadeIn">
-          <UserIcon className="h-7 w-7 mr-2 text-navy-700 animate-pulse" />
+    <div className="min-h-screen bg-[#0b2e1e] flex items-center justify-center px-6 py-12">
+      <div className="w-full max-w-md bg-green-900 rounded-2xl shadow-lg p-10 md:p-12 animate-fadeIn">
+        <h1 className="flex items-center justify-center text-3xl font-bold mb-6 text-green-300">
+          <UserIcon className="h-7 w-7 mr-2 text-green-400 animate-pulse" />
           Sign Up
         </h1>
 
         {message && (
           <p
             className={`mb-4 text-center ${
-              message.startsWith('Signup error') ? 'text-red-600' : 'text-green-600'
-            }`}
+              message.startsWith('Signup error') ? 'text-red-500' : 'text-green-400'
+            } font-semibold`}
           >
             {message}
           </p>
@@ -67,7 +67,7 @@ export default function SignupPage() {
             onChange={handleChange}
             placeholder="Email"
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
           <input
             type="password"
@@ -77,7 +77,7 @@ export default function SignupPage() {
             placeholder="Password"
             required
             minLength={6}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
           <input
             type="text"
@@ -85,7 +85,7 @@ export default function SignupPage() {
             value={form.name}
             onChange={handleChange}
             placeholder="Full Name"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
           <input
             type="text"
@@ -93,22 +93,22 @@ export default function SignupPage() {
             value={form.phone}
             onChange={handleChange}
             placeholder="Phone Number"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-navy-800 text-white py-3 rounded-lg hover:bg-navy-900 disabled:opacity-50 transition"
+            className="w-full bg-green-700 hover:bg-green-600 disabled:opacity-50 text-white py-3 rounded-lg font-semibold transition"
           >
             {loading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-navy-800">
+        <p className="mt-6 text-center text-green-300">
           Already have an account?{' '}
           <Link
             href="/LoginPage"
-            className="font-semibold text-navy-900 hover:text-navy-700 transition duration-300 animate-pulse"
+            className="font-semibold text-green-400 hover:text-green-300 transition duration-300 animate-pulse"
             aria-label="Go to login page"
           >
             Log In

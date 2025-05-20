@@ -26,18 +26,20 @@ export default function RequestRide() {
     } else {
       setSuccess(true);
       setForm({ name: '', phone: '', pickup: '', destination: '' });
+      // Optional: reset success message after few seconds
+      setTimeout(() => setSuccess(false), 4000);
     }
   };
 
   return (
-    <div className="min-h-screen bg-navy-900 flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl p-10 md:p-12">
-        <h1 className="text-3xl font-extrabold mb-6 text-center text-navy-900">
+    <div className="min-h-screen bg-[#0b2e1e] flex items-center justify-center px-6 py-12">
+      <div className="w-full max-w-md bg-green-900 rounded-2xl shadow-lg p-10 md:p-12 animate-fadeIn">
+        <h1 className="text-3xl font-extrabold mb-6 text-center text-green-300">
           Request a Ride
         </h1>
 
         {success && (
-          <div className="mb-4 bg-green-100 text-green-800 border border-green-300 px-4 py-2 rounded text-center">
+          <div className="mb-4 bg-green-800 text-green-200 border border-green-600 px-4 py-2 rounded text-center font-semibold">
             Ride requested successfully!
           </div>
         )}
@@ -50,7 +52,7 @@ export default function RequestRide() {
             onChange={handleChange}
             required
             placeholder="Your Name"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
           <input
             type="text"
@@ -59,7 +61,7 @@ export default function RequestRide() {
             onChange={handleChange}
             required
             placeholder="Phone Number"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
           <input
             type="text"
@@ -68,7 +70,7 @@ export default function RequestRide() {
             onChange={handleChange}
             required
             placeholder="Pickup Location"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
           <input
             type="text"
@@ -77,11 +79,11 @@ export default function RequestRide() {
             onChange={handleChange}
             required
             placeholder="Destination"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full px-4 py-3 rounded-lg border border-green-700 bg-green-800 text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
           <button
             type="submit"
-            className="w-full bg-navy-800 text-white py-3 rounded-lg hover:bg-navy-900 transition"
+            className="w-full bg-green-700 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition"
           >
             Request Ride
           </button>

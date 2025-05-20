@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link'; // For navigation
 import { supabase } from '@/lib/supabaseClient';
 
 export default function CancelRide() {
@@ -49,12 +50,16 @@ export default function CancelRide() {
 
   const renderMessage = () => {
     if (!message) return null;
-    const isError = message.toLowerCase().includes('error') || message.toLowerCase().includes('no ride');
+    const isError =
+      message.toLowerCase().includes('error') ||
+      message.toLowerCase().includes('no ride');
 
     return (
       <div
-        className={`mb-4 text-center px-4 py-2 rounded-lg text-sm animate-pulse ${
-          isError ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-green-100 text-green-700 border border-green-300'
+        className={`mb-4 text-center px-4 py-2 rounded-lg text-sm font-mono animate-fadeIn ${
+          isError
+            ? 'bg-red-200 text-red-700 border border-red-400'
+            : 'bg-green-200 text-green-900 border border-green-400'
         }`}
       >
         {message}
@@ -63,11 +68,19 @@ export default function CancelRide() {
   };
 
   return (
-    <div className="min-h-screen bg-navy-900 flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl p-10 md:p-12">
-        <div className="flex flex-col items-center justify-center mb-6">
-          <span className="text-5xl">🚫</span>
-          <h1 className="text-3xl font-extrabold mt-2 text-navy-900">Cancel Ride</h1>
+    <div className="min-h-screen bg-green-950 flex items-center justify-center px-6 py-12">
+      <div className="w-full max-w-xl bg-white rounded-3xl shadow-2xl p-12 md:p-16">
+        <div className="flex flex-col items-center justify-center mb-6 space-y-2">
+          <span className="text-6xl select-none">🚫</span>
+          <h1 className="text-4xl font-extrabold text-green-900 tracking-tight">
+            Cancel Ride
+          </h1>
+          <Link
+            href="/RequestRide"
+            className="text-green-700 hover:text-green-500 font-semibold underline transition"
+          >
+            Get New Ride
+          </Link>
         </div>
 
         {renderMessage()}
@@ -80,20 +93,20 @@ export default function CancelRide() {
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Enter your phone number"
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 transition"
+            className="w-full px-5 py-3 border border-green-600 rounded-lg text-green-900 placeholder-green-500 focus:outline-none focus:ring-4 focus:ring-green-700 transition"
           />
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-navy-800 text-white py-3 rounded-lg hover:bg-navy-900 transition disabled:opacity-50"
+            className="w-full bg-green-800 text-white py-3 rounded-lg hover:bg-green-900 disabled:opacity-60 transition font-semibold"
           >
             {loading ? 'Cancelling...' : 'Cancel Ride'}
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-navy-800 animate-bounce">
+        <p className="mt-8 text-center text-sm text-green-600 font-mono animate-pulse">
           Cancel anytime before the ride begins.
-        </div>
+        </p>
       </div>
     </div>
   );

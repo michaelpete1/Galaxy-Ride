@@ -20,8 +20,16 @@ body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
-      transparent,
+      rgb(11, 46, 30), /* solid green start (#0b2e1e) */
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+@keyframes fadeText {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.animate-fadeText {
+  animation: fadeText 6s ease-in-out infinite;
 }
