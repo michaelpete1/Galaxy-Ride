@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+  const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -21,6 +23,14 @@ export default function Login() {
     }, 100);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        router.replace('/');
+      }
+    });
+  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -61,7 +71,7 @@ export default function Login() {
         </p>
 
         {error && (
-          <p className="text-red-600 mb-6 text-center font-medium animate-pulse">
+          <p className="text-red-600 mb-6 text-center font-medium">
             {error}
           </p>
         )}
@@ -100,6 +110,16 @@ export default function Login() {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+        <div className="mt-6 text-center">
+          <span className="text-green-700">Don&apos;t have an account?</span>
+          <a
+            href="/SignupPage"
+            className="ml-2 font-semibold text-green-600 hover:text-green-800 underline transition-colors duration-200"
+            aria-label="Go to signup page"
+          >
+            Sign Up
+          </a>
+        </div>
       </div>
     </div>
   );

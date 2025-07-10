@@ -1,13 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link'; // For navigation
 import { supabase } from '@/lib/supabaseClient';
+import { useRouter } from 'next/navigation';
 
 export default function CancelRide() {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        router.replace('/LoginPage');
+      }
+    });
+  }, [router]);
 
   const handleCancel = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +114,7 @@ export default function CancelRide() {
           </button>
         </form>
 
-        <p className="mt-8 text-center text-sm text-green-600 font-mono animate-pulse">
+        <p className="mt-8 text-center text-sm text-green-600 font-mono">
           Cancel anytime before the ride begins.
         </p>
       </div>

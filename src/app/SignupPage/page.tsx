@@ -45,7 +45,7 @@ export default function SignupPage() {
     <div className="min-h-screen bg-[#0b2e1e] flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md bg-green-900 rounded-2xl shadow-lg p-10 md:p-12 animate-fadeIn">
         <h1 className="flex items-center justify-center text-3xl font-bold mb-6 text-green-300">
-          <UserIcon className="h-7 w-7 mr-2 text-green-400 animate-pulse" />
+          <UserIcon className="h-7 w-7 mr-2 text-green-400" />
           Sign Up
         </h1>
 
@@ -108,7 +108,7 @@ export default function SignupPage() {
           Already have an account?{' '}
           <Link
             href="/LoginPage"
-            className="font-semibold text-green-400 hover:text-green-300 transition duration-300 animate-pulse"
+            className="font-semibold text-green-400 hover:text-green-300 transition duration-300"
             aria-label="Go to login page"
           >
             Log In
