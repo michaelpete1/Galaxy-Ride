@@ -40,7 +40,6 @@ export default function Navbar() {
     { id: 'forgot', label: 'Forgot Password', href: '/ForgotPassword', icon: <KeyRound className="w-5 h-5 mr-2" /> },
     { id: 'request', label: 'Request Ride', href: '/RequestRide', icon: <Car className="w-5 h-5 mr-2" /> },
     { id: 'myrides', label: 'My Rides', href: '/MyRides', icon: <Car className="w-5 h-5 mr-2" /> },
-    { id: 'cancel', label: 'Cancel Ride', href: '/CancelRide', icon: <Ban className="w-5 h-5 mr-2" /> },
     { id: 'profile', label: 'Profile', href: '/ProfilePage', icon: <User className="w-5 h-5 mr-2" /> },
   ];
 
