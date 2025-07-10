@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Menu, X, Home, User, Car, Ban, KeyRound, UserPlus, LogIn, LogOut } from 'lucide-react';
+import { Menu, X, Home, User, Car, KeyRound, UserPlus, LogIn, LogOut } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 
 type NavItem = {
